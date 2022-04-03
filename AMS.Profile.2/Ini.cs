@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -185,14 +185,14 @@ namespace AMS.Profile
             return str == "" ? new string[0] : str.Split(new char[1]);
         }
 
-        public void ChangeSectionName(string Section, string NewSection)
+        public void ChangeSectionName(string section, string newSection)
 		{
             string iniConfig = string.Empty;
 
             using (StreamReader reader = new StreamReader(Name))
 			{
                 iniConfig = reader.ReadToEnd();
-                iniConfig = iniConfig.Replace($"[{Section}]", $"[{NewSection}]");
+                iniConfig = iniConfig.Replace($"[{section}]", $"[{newSection}]");
 
                 reader.Close();
 			}
@@ -206,16 +206,42 @@ namespace AMS.Profile
 			}
 		}
 
-        public void ChangeEntryName(string Section, string Entry, string NewEntry)
+        public void ChangeEntryName(string section, string entry, string newEntry)
 		{
-            foreach (string entry in GetEntryNames(Section))
+            foreach (string entry_ in GetEntryNames(section))
 			{
-                bool newEntry = entry == Entry;
-                string value = GetValue(Section, entry).ToString();
+                bool newEntry_ = entry_ == entry;
+                string value = GetValue(section, entry_).ToString();
 
-                RemoveEntry(Section, entry);
-                SetValue(Section, newEntry ? NewEntry : entry, value);
+                RemoveEntry(section, entry_);
+                SetValue(section, newEntry_ ? newEntry : entry_, value);
 			}
         }
+
+        private Random random = new Random();
+
+        private string RandomString(int length)
+        {
+            const string chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public void AddSection(string section)
+		{
+            if (HasSection(section))
+                throw new InvalidOperationException("A section with this name already exists.");
+            string rsgString = RandomString(150);
+            string content = string.Empty;
+            using (StreamReader reader = new StreamReader(Name))
+			{
+                content = reader.ReadToEnd();
+			}
+            using (StreamWriter writer = new StreamWriter(Name))
+			{
+                writer.WriteLine(content + $"\n[{section}]");
+                writer.Close();
+			}
+		}
     }
 }
