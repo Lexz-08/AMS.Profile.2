@@ -9,7 +9,9 @@ Here are the features that don't exist on the original that I added:
   - `Ini.ChangeEntryName(string, string, string)`
     - You give the specific section, the original entry name, and the new entry name, and the old is replaced by the new.
   - `Ini.AddSection(string)`
-    - Adds a new section to the current INI file without having to remove temporary entries for later use
+    - Adds a new section to the current INI file without having to remove temporary entries for later use.
+  - `IniReader.ReadConfig(string)`
+    - Reads an ini-config file into a structurized dictionary. (format: <string, <string, string>>)
 
 ## How It Works
 ### Ini.ChangeSectionName(string, string)
@@ -23,6 +25,14 @@ This is an iteration loop by the way.
 1. Gets the value of the entry in the current iteration.
 2. Uses `Ini.RemoveEntry(string, string)` in the original dll to remove the entry in the current iteration.
 3. Re-creates the entry with its original value in the current iteration, and uses the new name specified if it matches the original name given.
+
+### IniReader.ReadConfig(string)
+There is a nested loop in this by the way.
+1. Uses `Ini.GetSectionNames()` to get every section.
+2. Creates a dictionary for storing all entries of the current section.
+3. Uses `Ini.GetEntryNames(string)` to get every entry in the current section iteration.
+4. Stores each entry and its value in the current section dictionary.
+5. Stores the entry dictionary for the current section and the current section name in the config info.
 
 ## Code Has Been Tested
 I have tested both methods with an ini file containing several sections, and several entries for each section. I made everything was in order every time there was a change in the file without something be added.
