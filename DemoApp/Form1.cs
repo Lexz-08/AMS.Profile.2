@@ -1,4 +1,7 @@
 ﻿using AMS.Profile;
+using AMS.Profile._2;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace DemoApp
@@ -11,7 +14,8 @@ namespace DemoApp
 
 			config = new Ini(Application.StartupPath + "\\config.ini");
 
-			config.AddSection("Example-Settings-3");
+			Dictionary<string, Dictionary<string, string>> configInfo = IniReader.ReadConfig(config.Name);
+			MessageBox.Show(string.Join(", ", configInfo["Example-Settings-2"].Values.ToArray()));
 		}
 
 		private Ini config = null;

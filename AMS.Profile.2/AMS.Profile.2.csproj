@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="Ini.cs" />
+    <Compile Include="IniReader.cs" />
     <Compile Include="IProfile.cs" />
     <Compile Include="IReadOnlyProfile.cs" />
     <Compile Include="Profile.cs" />

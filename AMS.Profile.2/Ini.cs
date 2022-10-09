@@ -201,9 +201,7 @@ namespace AMS.Profile
             File.Create(Name).Close();
 
             using (StreamWriter writer = new StreamWriter(Name))
-			{
                 writer.Write(iniConfig);
-			}
 		}
 
         public void ChangeEntryName(string section, string entry, string newEntry)
@@ -218,20 +216,10 @@ namespace AMS.Profile
 			}
         }
 
-        private Random random = new Random();
-
-        private string RandomString(int length)
-        {
-            const string chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
         public void AddSection(string section)
 		{
             if (HasSection(section))
                 throw new InvalidOperationException("A section with this name already exists.");
-            string rsgString = RandomString(150);
             string content = string.Empty;
             using (StreamReader reader = new StreamReader(Name))
 			{
